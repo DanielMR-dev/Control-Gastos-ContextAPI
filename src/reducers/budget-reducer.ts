@@ -5,7 +5,7 @@ export type BudgetActions =
 
 // Creacion del type del State para el Budget     
 export type BudgetState = {
-    budget: number
+    budget: number;
 }
 
 // Creación del estado inicial
@@ -26,6 +26,6 @@ export const budgetReducer = (
     }
 
 
-    return state
+    return state;
 
 }
