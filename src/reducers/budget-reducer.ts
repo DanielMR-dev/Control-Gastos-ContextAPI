@@ -2,7 +2,8 @@
 // Creacion del type para las acciones del Budget
 export type BudgetActions =
     { type: 'add-budget', payload: {budget: number} } |
-    { type: 'show-modal' }
+    { type: 'show-modal' } |
+    { type: 'close-modal' }
 
 // Creacion del type del State para el Budget     
 export type BudgetState = {
@@ -33,6 +34,13 @@ export const budgetReducer = (
         return {
             ...state,
             modal: true
+        }
+    }
+
+    if(actions.type === 'close-modal') {
+        return {
+            ...state,
+            modal: false
         }
     }
 
