@@ -1,46 +1,69 @@
+import { v4 as uuidv4 } from 'uuid';
+import { DraftExpense, Expense } from "../types";
 
 // Creacion del type para las acciones del Budget
 export type BudgetActions =
     { type: 'add-budget', payload: {budget: number} } |
     { type: 'show-modal' } |
-    { type: 'close-modal' }
+    { type: 'close-modal' } |
+    { type: 'add-expense', payload: {expense: DraftExpense}}
 
 // Creacion del type del State para el Budget     
 export type BudgetState = {
     budget: number;
     modal: boolean;
+    expenses: Expense[];
 }
 
 // Creación del estado inicial
 export const initialState : BudgetState = {
     budget: 0,
-    modal: false
+    modal: false,
+    expenses: []
+}
+
+const createExpense = (draftExpense : DraftExpense) : Expense => {
+    return {
+        ...draftExpense,
+        id: uuidv4()
+    }
 }
 
 // Creacion del reducer para el Budget
 export const budgetReducer = (
         state: BudgetState = initialState,
-        actions: BudgetActions
+        action: BudgetActions
     ) => {
 
-    if(actions.type === 'add-budget') {
+    if(action.type === 'add-budget') {
         return {
             ...state,
-            budget: actions.payload.budget
+            budget: action.payload.budget
         }
     }
 
-    if(actions.type === 'show-modal') {
+    if(action.type === 'show-modal') {
         return {
             ...state,
             modal: true
         }
     }
 
-    if(actions.type === 'close-modal') {
+    if(action.type === 'close-modal') {
         return {
             ...state,
             modal: false
+        }
+    }
+
+    if(action.type === 'add-expense') {
+
+        const expense = createExpense(action.payload.expense);
+        
+        return {
+            ...state,
+            expenses: [...state.expenses, ]
+
         }
     }
 
