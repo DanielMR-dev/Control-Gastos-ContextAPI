@@ -26,7 +26,7 @@ export default function ExpenseDetail({expense} : ExpenseDetailProps) {
     const leadingActions = () => (
         <LeadingActions>
             <SwipeAction
-                onClick={() => {}}
+                onClick={() => dispatch({type: 'get-expense-by-id', payload: {id: expense.id}})}
             >
                 Actualizar
             </SwipeAction>
@@ -34,21 +34,21 @@ export default function ExpenseDetail({expense} : ExpenseDetailProps) {
     )
 
     const trailingActions = () => (
-        <LeadingActions>
+        <TrailingActions>
             <SwipeAction
                 onClick={() => dispatch({type: 'remove-expense', payload: {id: expense.id }})}
                 destructive={true}
             >
                 Eliminar
             </SwipeAction>
-        </LeadingActions>
+        </TrailingActions>
     )
 
     return (
         <SwipeableList>
             <SwipeableListItem
                 maxSwipe={1}
-                leadingActions={leadingActions()}
+                leadingActions= {leadingActions()}
                 trailingActions={trailingActions()}
             >
                 <div className="bg-white shadow-lg p-10 w-full border-b border-gray-200 flex gap-5 items-center">
