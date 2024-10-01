@@ -8,9 +8,7 @@ import ErrorMessage from "./ErrorMessage";
 import { useBudget } from "../hooks/useBudget";
 
 
-
 export default function ExpenseForm() {
-
     const [expense, setExpense] = useState<DraftExpense>({
         amount: 0,
         expenseName: '',
@@ -19,16 +17,17 @@ export default function ExpenseForm() {
     });
 
     const [error, setError] = useState('');
-
     const { state, dispatch } = useBudget();
 
     useEffect(() => {
         if(state.editingId) {
-            const editingExpense = state.expenses.filter( currentExpense => currentExpense.id === state.editingId )[0];
-            console.log(editingExpense);
-            setExpense(editingExpense);
+            const editingExpense = state.expenses.find(expense => expense.id === state.editingId);
+            if (editingExpense) {
+                setExpense(editingExpense);
+            }
         }
     }, [state.editingId]);
+    
 
     const handleChange = (e : ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -54,9 +53,14 @@ export default function ExpenseForm() {
             return;
         }
 
-        // Agregar un nuevo gasto
-        dispatch({type: 'add-expense', payload: {expense}});
-
+        // Si estamos editando un gasto (basado en si hay un editingId en el estado)
+        if(state.editingId) {
+            dispatch({type: 'update-expense', payload: {expense: {id: state.editingId, ...expense }}});
+        } else {
+            // Si no hay editingId, entonces estamos agregando un nuevo gasto
+            dispatch({type: 'add-expense', payload: {expense}});
+        }
+         
         // Reiniciar el State
         setExpense({
             amount: 0,
@@ -88,7 +92,7 @@ export default function ExpenseForm() {
                     className="bg-slate-100 p-2"
                     name="expenseName"
                     onChange={handleChange}
-
+                    value={expense.expenseName}
                 />
             </div>
 
@@ -121,6 +125,7 @@ export default function ExpenseForm() {
                     className="bg-slate-100 p-2"
                     name="category"
                     onChange={handleChange}
+                    value={expense.category}
                 >
                     <option value="">-- Seleccione --</option>
                     {categories.map( category => (
