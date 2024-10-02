@@ -1,15 +1,9 @@
-import { useMemo } from "react";
 import { useBudget } from "../hooks/useBudget";
 import AmountDisplay from "./AmountDisplay";
 
 export default function BudgetTracker() {
-    const { state } = useBudget();
+    const { state, totalExpenses, remainingBudget } = useBudget();
 
-    // Calcular el total gastado
-    const totalExpenses = useMemo(() => state.expenses.reduce((total, expense) => expense.amount + total, 0) , [state.expenses])
-
-    // Cuando queda del presupuesto
-    const remainingBudget = state.budget - totalExpenses;
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

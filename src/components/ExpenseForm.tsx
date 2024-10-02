@@ -17,13 +17,15 @@ export default function ExpenseForm() {
     });
 
     const [error, setError] = useState('');
-    const { state, dispatch } = useBudget();
+    const [previousAmount, setPreviousAmount] = useState(0);
+    const { state, dispatch, remainingBudget } = useBudget();
 
     useEffect(() => {
         if(state.editingId) {
             const editingExpense = state.expenses.find(expense => expense.id === state.editingId);
             if (editingExpense) {
                 setExpense(editingExpense);
+                setPreviousAmount(editingExpense.amount);
             }
         }
     }, [state.editingId]);
@@ -47,9 +49,15 @@ export default function ExpenseForm() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        //Validar
+        // Validar
         if(Object.values(expense).includes('')) {
             setError('Todos los campos son obligatorios');
+            return;
+        }
+
+        // Validar que no me pase del limite
+        if((expense.amount - previousAmount) > remainingBudget) {
+            setError('Ese gasto se sale del presupuesto');
             return;
         }
 
@@ -68,6 +76,7 @@ export default function ExpenseForm() {
             category: '',
             date: new Date()
         });
+        setPreviousAmount(0);
     }
 
     return (
